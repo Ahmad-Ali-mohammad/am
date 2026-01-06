@@ -1,0 +1,7 @@
+{
+  "name": "Al-Manassa - Interactive Arabic Learning Platform",
+  "description": "A comprehensive interactive Arabic platform providing a reliable digital learning environment for specialized researchers, students, and instructors. It features course management, community interaction, and advanced administrative tools.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
