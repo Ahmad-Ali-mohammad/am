@@ -138,9 +138,24 @@ export const ContentProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await contentAPI.get();
-      if (response.data && Object.keys(response.data).length > 1) {
-        setContent({ ...INITIAL_CONTENT, ...response.data });
+      // نتحقق من وجود محتوى حقيقي (title في hero غير فارغ)
+      if (response.data && response.data.hero?.title) {
+        // دمج البيانات مع المحتوى الأصلي للحفاظ على القيم الافتراضية
+        const mergedContent = { ...INITIAL_CONTENT };
+        Object.keys(response.data).forEach(key => {
+          if (response.data[key] !== null && response.data[key] !== undefined) {
+            if (Array.isArray(response.data[key]) && response.data[key].length > 0) {
+              mergedContent[key] = response.data[key];
+            } else if (typeof response.data[key] === 'object' && Object.keys(response.data[key]).length > 0) {
+              mergedContent[key] = { ...INITIAL_CONTENT[key], ...response.data[key] };
+            } else if (response.data[key]) {
+              mergedContent[key] = response.data[key];
+            }
+          }
+        });
+        setContent(mergedContent);
       }
+      // إذا لم يكن هناك محتوى، نحافظ على INITIAL_CONTENT
     } catch (error) {
       console.error('Failed to load content:', error);
     } finally {
